@@ -14,6 +14,11 @@ ENV DHLEVEL=2048 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN \
+  echo "**** removing nginx package ****" && \
+  apk del nginx && \
+  echo "**** install nginx package from alpine edge ****" && \
+  apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    nginx && \
   echo "**** install build packages ****" && \
   apk add --no-cache --virtual=build-dependencies \
     build-base \
@@ -82,8 +87,6 @@ RUN \
     whois && \
   apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
     php83-pecl-mcrypt && \
-  apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main \
-    nginx-mod-http-lua && \
   echo "**** install certbot plugins ****" && \
   if [ -z ${CERTBOT_VERSION+x} ]; then \
     CERTBOT_VERSION=$(curl -sL  https://pypi.python.org/pypi/certbot/json |jq -r '. | .info.version'); \
