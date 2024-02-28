@@ -18,6 +18,10 @@ RUN \
   apk add --no-cache --virtual=build-dependencies \
     build-base \
     cargo \
+    curl \
+    jq \
+    python3 \
+    py3-pip \
     libffi-dev \
     libxml2-dev \
     libxslt-dev \
@@ -76,8 +80,10 @@ RUN \
     php83-xmlreader \
     php83-xsl \
     whois && \
-  apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+  apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
     php83-pecl-mcrypt && \
+  apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    nginx-mod-http-lua && \
   echo "**** install certbot plugins ****" && \
   if [ -z ${CERTBOT_VERSION+x} ]; then \
     CERTBOT_VERSION=$(curl -sL  https://pypi.python.org/pypi/certbot/json |jq -r '. | .info.version'); \
